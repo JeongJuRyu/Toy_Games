@@ -2,41 +2,15 @@
 ## 개요
 vanila JS를 활용하여 웹 어플리케이션으로써 작동하는 다양한 게임을 제작했다.
 
-* * *
+
+
 ## 제작한 게임들
 
 - Tic-Tac-To
 - 2048
 - 오목
 
-* * *
-/*## 사용교재
-### 주교재
-* Do it! 점프 투 파이썬  
-* 뇌를 자극하는 파이썬 3
-* 코딩도장
-* 컴퓨팅 사고
-* 코딩을 지탱하는 기술
 
-### 부교재
-* 컴퓨터 사이언스 부트캠프 with 파이썬
-* 전문가를 위한 파이썬
-* Python 더 쉽게, 더 깊게
-* 나만의 Python Game 만들기
-* Python과 Pygame으로 게임만들기
-* 처음 시작하는 파이썬
-* 파이썬 200제
-* 파이썬 코딩의 기술
-* 엔지니어를 위한 파이썬
-* 파이썬 JUPYTER NOTEBOOK 실전 입문
-* 파이썬으로 웹 크롤러 만들기
-* Pro git 2/ed
-* 팀을 위한 Git
-* 프로그래핑 패턴
-* 객체지향의 사실과 오해
-* 객체지향 소프트웨어 공학
-* 파이썬을 이용한 웹 크롤링과 스크레이핑
-* 파이썬으로 데이터 주무르기
 
 ### 참고링크
 * [점프 투 파이썬](https://wikidocs.net/book/1)
@@ -57,11 +31,4 @@ vanila JS를 활용하여 웹 어플리케이션으로써 작동하는 다양한
 * [Samsung SW Expert Academy](https://swexpertacademy.com/main/main.do)
 * [realpython/python3-OOP](https://realpython.com/python3-object-oriented-programming/)
 
-### 참고자료:
-* 리눅스 마스터 1급 정복하기
-* 쉽게 배우는 알고리즘: 관계중심의 사고법
 
-## 이전 세미나
-* [17년도 파이썬 세미나](https://github.com/imn00133/PythonSeminar17)
-* [18년도 파이썬 세미나](https://github.com/imn00133/PythonSeminar18)
-* [19년도 파이썬 세미나](https://github.com/imn00133/PythonSeminar19)*/
