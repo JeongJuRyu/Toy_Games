@@ -2,6 +2,9 @@
     display : inline-block;
     vertical-align : top;
 }
+.turn {
+    border: 1px solid black;
+}
 #rival {
     vertical-align: bottom;
 }
@@ -13,6 +16,7 @@
     display:inline-block;
     vertical-align: top;
     width:200px;
+    background : silver;
 }
 .card {
     width : 50px;
@@ -21,6 +25,7 @@
     position :relative;
     border : 1px solid black;
     margin-bottom : 10px;
+    background : white;
 }
 .card-name{
     text-align : center;
@@ -56,4 +61,15 @@
 }
 .card-hidden {
     display:none;
+}
+.card-selected{
+    border: 2px solid red;
+}
+.card-turnover{
+    background:gray;
+}
+#turn-btn {
+    position : absolute;
+    top: 28%;
+    right : 0;
 }
