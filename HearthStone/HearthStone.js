@@ -10,7 +10,6 @@ var rival = {
     selectedCardData : null,
 };
 
-
 var my = {
     hero : document.getElementById('my-hero'),
     deck : document.getElementById('my-deck'),
@@ -30,23 +29,81 @@ function deckToField(data, myTurn) { // 덱에 있는 카드 클릭 시 필드�
     var obj = myTurn ? my : rival;
     var nowCost = Number(obj.cost.textContent);
     if(nowCost < data.cost){ // 현재 남은 cost와 카드의 cost 비교
-        return 'end';
+        return 'end'; // my.cost가 data의 cost보다 작다면 더 이상 필드에 추가가 불가능하므로 end를 return
     }
     var idx = obj.deckData.indexOf(data);
-        obj.deckData.splice(idx,1); // 덱에서 카드 제거
-        obj.fieldData.push(data); // field에 카드 추가
-        obj.deck.innerHTML = ''; 
-        obj.field.innerHTML = '';
-        obj.fieldData.forEach(function(data){
-            connectCardDom(data, obj.field);
-        })
-        obj.deckData.forEach(function(data){
-            connectCardDom(data, obj.deck);
-        });
-        data.field = true; // data가 필드에 올라갔다면 클릭해도 아무 일 없도록
-        obj.cost.textContent = nowCost - data.cost;
+    obj.deckData.splice(idx,1); // 덱 data에서 카드 제거
+    obj.fieldData.push(data); // 필드 data에 카드 추가
+    redrawField(obj);
+    redrawDeck(obj)
+    data.field = true; // data가 필드에 올라갔다면 클릭해도 아무 일 없도록
+    obj.cost.textContent = nowCost - data.cost;
+}
+function redrawField(obj){
+    obj.field.innerHTML = '';
+    obj.fieldData.forEach(function(data){
+        connectCardDom(data, obj.field);
+    })
+}
+function redrawDeck(obj){
+    obj.deck.innerHTML = '';
+    obj.deckData.forEach(function(data){
+        connectCardDom(data, obj.deck);
+    });
+}
+function redrawHero(obj){
+    obj.hero.innerHTML = '';
+    connectCardDom(obj.heroData[0], obj.hero, true);
+}
+function redrawScreen(myScreen){
+    var obj = myScreen ? my : rival;
+    redrawField(obj);
+    redrawDeck(obj);
+    redrawHero(obj);
 }
 
+function action(card, data, myTurn){
+    var me = myTurn ? my : rival;
+    var opponent = myTurn ? rival : my;
+    if(card.classList.contains('card-turnover')){
+        return;
+    }
+    //상대카드면서 내 카드가 선택되어 있고 턴이 끝난 카드가 아니면
+    var rivalCard = myTurn ? !data.mine : data.mine;
+    if(rivalCard && me.selectedCard) {
+        data.hp = data.hp - me.selectedCardData.att;
+        if(data.hp<=0){ //상대 카드가 죽었다면
+            var index = opponent.fieldData.indexOf(data);
+            if(index > -1){ //쫄병이 죽었을 때
+                opponent.fieldData.splice(index,1);
+            } else { // 죽은 카드가 영웅일 때
+                alert('승리하셨습니다!')
+                init();
+            }
+        }
+        redrawScreen(!myTurn);
+        me.selectedCard.classList.remove('card-selected');
+        me.selectedCard.classList.add('card-turnover');
+        me.selectedCard = null;
+        me.selectedCardData = null;
+        return; 
+    } else if (rivalCard){
+        return;
+    }
+    //필드에 있는 카드를 클릭했다면
+    if (data.field){
+        card.parentNode.querySelectorAll('.card').forEach((card)=>{
+           card.classList.remove('card-selected'); 
+        });
+        card.classList.add('card-selected');
+        me.selectedCard = card;
+        me.selectedCardData = data;
+    } else { // 덱에 있는 카드를 클릭했다면 
+        if(deckToField(data, myTurn) !== 'end'){
+            myTurn ? makeMyDeck(1) : makeRivalDeck(1);
+        }
+    }
+}
 function connectCardDom(data, dom, hero){
     var card = document.querySelector('.card-hidden .card').cloneNode(true);
     //true 인자를 줌으로써 내부 태그들까지 복사
@@ -60,40 +117,7 @@ function connectCardDom(data, dom, hero){
         card.appendChild(name);
     }
     card.addEventListener('click', () => {
-        if(turn){ // 내 턴이면
-            if(!data.mine) {
-                data.hp = data.hp - my.selectedCard.att;
-                console.log(data.hp);
-                my.selectedCard.classList.remove('card-selected');
-                my.selectedCard.classList.add('card-turnover');
-                my.selectedCard = null;
-                my.selectedCardData = null;
-                return; 
-            } else if (1){}
-            // 내 턴이 아닌데 카드 클릭하면 이벤트 종료
-            if (data.field){
-                card.parentNode.querySelectorAll('.card').forEach((card)=>{
-                   card.classList.remove('card-selected'); 
-                });
-                card.classList.add('card-selected');
-                my.selectedCard = card;
-                my.selectedCardData = data;
-            } else {
-                if(deckToField(data, true) !== 'end'){
-                    makeMyDeck(1);
-                }
-            }
-        } else { //상대의 턴
-            if(data.mine || data.field) return;
-            var nowCost = Number(rival.cost.textContent);
-            if(nowCost < data.cost){
-                return;
-            }
-            if(deckToField(data) !== 'end'){
-                makeRivalDeck(1);
-            }
-            data.field = true;
-        }
+        action(card, data, turn);
     })
     dom.appendChild(card);
 }
@@ -102,38 +126,42 @@ function makeRivalDeck(num){
     for(var i =0; i < num; i++){
         rival.deckData.push(cardFactory());
     }
-    rival.deck.innerHTML = '';
-    rival.deckData.forEach((data)=>{
-        connectCardDom(data, rival.deck);
-    })
+    redrawDeck(rival);
 }
 
 function makeMyDeck(num){
     for(var i =0; i < num; i++){
         my.deckData.push(cardFactory(false,true));
     }
-    my.deck.innerHTML = '';
-    my.deckData.forEach((data)=>{
-        connectCardDom(data, my.deck);
-    })
+    redrawDeck(my);
 }
 
 function makeRivalHero(){
     rivalHeroData = cardFactory(true);
+    rival.heroData.push(rivalHeroData);
     connectCardDom(rivalHeroData, rival.hero, true);
 }
     
 
 function makeMyHero(){
     myHeroData = cardFactory(true,true);
+    my.heroData.push(myHeroData);
     connectCardDom(myHeroData, my.hero, true);
 }
 
 function init(){
+    rival.fieldData = [];
+    rival.deckData = [];
+    rival.heroData = [];
+    my.fieldData = [];
+    my.deckData = [];
+    my.heroData = [];
     makeRivalDeck(5);
     makeMyDeck(5);
     makeMyHero();
     makeRivalHero();
+    redrawScreen(false);
+    redrawScreen(true);
 }
 
 function Card(hero, myCard){
@@ -141,6 +169,7 @@ function Card(hero, myCard){
         this.att = Math.ceil(Math.random() * 2);
         this.hp = Math.ceil(Math.random() * 5) + 25;
         this.hero = true;
+        this.field = true;
     } else {
         this.att = Math.ceil(Math.random() * 5);
         this.hp = Math.ceil(Math.random() * 5);
@@ -157,6 +186,11 @@ function cardFactory(hero, myCard){
 }
 
 turnButton.addEventListener('click',() => {
+    var obj = turn ? my : rival;
+    document.getElementById('rival').classList.toggle('turn');
+    document.getElementById('my').classList.toggle('turn');
+    redrawField(obj);
+    redrawHero(obj);
     turn = !turn;
     if(turn){
         my.cost.textContent = 10;
@@ -164,7 +198,5 @@ turnButton.addEventListener('click',() => {
     else{
         rival.cost.textContent = 10;
     }
-    document.getElementById('rival').classList.toggle('turn');
-    document.getElementById('my').classList.toggle('turn');
 })
 init();
