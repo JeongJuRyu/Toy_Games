@@ -6,7 +6,7 @@ vanila JS를 활용하여 웹 어플리케이션으로써 작동하는 다양한
 
 ## 제작한 게임들
 
-- Tic-Tac-To
+- Mini-Card-Game
 - 2048
 - 오목
 
