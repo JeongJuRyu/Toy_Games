@@ -9,9 +9,9 @@ var startXY;
 var endXY;
 
 function init(){
-    data = [];
+    data = []; // game over시 마다 data를 초기화
     var fragment = document.createDocumentFragment();
-    [1,2,3,4].forEach((row)=> {
+    [1,2,3,4].forEach(()=> {
         var rowData = [];
         data.push(rowData);
         var tr = document.createElement('tr');
@@ -64,7 +64,7 @@ window.addEventListener('mousedown', (event) => {
     startXY = [event.clientX, event.clientY];
 })
 
-window.addEventListener('mousemove', (event) => {
+window.addEventListener('mousemove', () => {
     if(startDrag) {
         dragging = true;
     }
