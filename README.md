@@ -9,5 +9,5 @@ vanila JS를 활용하여 웹 어플리케이션으로써 작동하는 다양한
 - MineSweeper
 - MiniCardGame
 - 2048
-- 오목
+- Tetris
 
