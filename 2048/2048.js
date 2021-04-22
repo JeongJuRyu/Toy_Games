@@ -1,7 +1,6 @@
 var table = document.getElementById('table');
 var data = []; // 현재 화면의 data와 동기화
 var scoreTable = document.getElementById('score'); // 점수표
-
 var startDrag = false;
 var dragging = false;
 //direction을 판단하기 위한 변수
